@@ -1,43 +1,36 @@
 #include <iostream>
 #include <string>
+#include <cmath>
 
 // type condition
 typedef struct Conditions {
     double profondeur, vitesse, temps;
 }Conditions;
 
-
 // diver struct
 typedef struct Diver {
-    Diver(std::string prenom, double masse, double volume, double acceleration, Conditions conditions);
-
     std::string prenom;
     double masse;
     double volume;
     double acceleration;
     Conditions conditions;
-
-
 } Diver;
 
-// diver constructor
-Diver::Diver(std::string prenom, double masse, double volume, double acceleration, Conditions conditions) {
-    this->prenom = prenom;
-    this->masse = masse;
-    this->volume = volume;
-    this->acceleration = acceleration;
-    this->conditions = conditions;
-}
-
-
 // display (temps, profondeur, vitesse, acceleration)
-void display(Diver diver) {
+void display(const Diver& diver) {
     std::cout << diver.conditions.temps << ", "<< diver.conditions.profondeur << ", " << diver.conditions.vitesse << ", "<< diver.acceleration << std::endl;
 }
 
 // The diver diving
-void dive(Diver diver) {
+void dive(const Diver& diver) {
     display(diver);
+}
+
+void evolve(Diver diver, Conditions conditions) {
+    double g(9.81);
+    double u(1-1000*(conditions.temps/diver.masse));
+    double alpha(exp(conditions.temps - diver.conditions.temps));
+    diver.conditions = {conditions.profondeur, (alpha*(conditions.vitesse - g*u) + g*u), conditions.temps};
 }
 
 int main() {
@@ -45,3 +38,4 @@ int main() {
     dive(jacques);
     return 0;
 }
+
